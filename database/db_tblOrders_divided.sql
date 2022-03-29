@@ -137,6 +137,9 @@ CREATE TABLE tbl_shopping_cart (
     CONSTRAINT cart_book_fkey FOREIGN KEY (book_id) REFERENCES tbl_books(book_id) ON DELETE CASCADE
 );
 
+ALTER TABLE tbl_shopping_cart
+ADD UNIQUE (user_id, book_id, book_count, amount, status , created_at);
+
 
 -- Order history 
 -- New Cide

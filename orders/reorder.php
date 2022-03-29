@@ -10,10 +10,10 @@
             if(mysqli_query($conn, $sql)){
                 $new_order_id = mysqli_insert_id($conn);
                 $sql = "INSERT INTO tbl_order_history(order_id, book_id, amount, book_count) VALUES ('$new_order_id', '$bkid', '$price', 1 );";
-                echo $sql;
                 if(mysqli_query($conn, $sql)){
                     $next = $_GET['next'];
-                    header("Location: $next");
+                    echo "<h3>Successsfully reordered!</h3>";
+                    header("refresh: 2; url = $next");
                 } else {
                     echo "<h3>Unable to Reorder Book </h3>";
 
