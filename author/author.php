@@ -67,8 +67,8 @@
 <html lang="en">
     <h1>Welcome Back <?php echo $_SESSION['f_name']; ?></h1> <hr>
     <a href ="../users/users-payment-info.php">Manage Payment Info</a> <br><br>
-    <a href ="../users/users-payment-info.php">My Orders</a><br><br>
-    <a href ="../users/users-payment-info.php">My Shopping Cart</a> <br><br>
+    <a href ="../orders/order_history.php">My Orders</a><br><br>
+    <a href ="../orders/shopping_cart.php">My Shopping Cart</a> <br><br>
     <a href ="../premium/users-premium.php">My Benefits/Membership</a><hr>
     <h3>My Books</h3>
     <table>
