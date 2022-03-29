@@ -81,6 +81,7 @@
             <th>Price</th>
             <th>Rating</th>
             <th>Authors</th>
+            <th>Order</th>
         </tr>
         <?php foreach($books_1 as $book): ?>
             <tr>
@@ -92,6 +93,7 @@
                 <td><?php $number = sprintf('%.2f', $book['price']); echo '$'.$number;  ?></td>
                 <td><?php echo $book['rating'] ?></td>
                 <td><?php  echo get_author_for_each_book($book['book_id'], $conn);?></td>
+                <td><a href="../orders/reorder.php?bkid=<?php echo $book['book_id']; ?>&pr=<?php echo $book['price']; ?>&next=<?php echo $_SERVER['PHP_SELF']; ?>"><button>Order</button></a></td>
             </tr>
         <?php endforeach; ?>
     </table>
