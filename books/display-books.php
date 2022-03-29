@@ -25,6 +25,9 @@
                     <p><b>ISBN:</b>&emsp;<?php echo $book['isbn'] ?> &emsp;<b>Genre:</b>&emsp;<?php echo $book['genre'] ?> &emsp;<b>Type:</b>&emsp;<?php echo determine_Booktype($book['book_type']); ?></p>
                     <p><b>Price:</b>&emsp;<?php $number = sprintf('%.2f', $book['price']); echo '$'.$number; ?> &nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<b>Rating:</b>&emsp;<?php echo $book['rating'] ?></p>
                     <p><b>Authors:</b>&emsp;<?php  echo get_author_for_each_book($book['book_id'], $conn);?></p>
+                    <?php if(!isset($_SESSION['admin'])): ?>
+                        <p><a href="./books/comments.php?id=<?php echo $book['book_id']; ?>&next=<?php echo $_SERVER['PHP_SELF']; ?>"><b>Comments...</b></a></p>
+                    <?php endif; ?>
                 </div>
             </td>
             <td style="text-align:center;">
