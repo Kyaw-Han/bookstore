@@ -1,7 +1,9 @@
 <?php
     session_start();
     print_r($_SESSION);
-    $user_id = $_SESSION['user_id'];
+    if(isset( $_SESSION['user_id'])){
+        $user_id = $_SESSION['user_id'];
+    }
 
     include('./config/db_connection.php');
 
