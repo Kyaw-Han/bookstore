@@ -5,11 +5,6 @@
     include('../config/db_connection.php');
     include('../variables/variables.php');
 
-    $array = array(12,43,66,21,56,43,43,78,78,100,43,43,43,21);
-    $r = array_filter(array_count_values($array), function($v) { return $v > 1; });
-    print_r($r);
-
-
     $cart_items = retrieve_shopping_cart($tbl_shopping_cart, $user_id, $conn, $tbl_books);
     $payment_method = retrieve_payment_method($tbl_user_payment, $user_id, $conn);
     $address = retrieve_user_address($tbl_user_address, $user_id, $conn);
@@ -18,27 +13,33 @@
     $shipping_method = get_shipping_methods($conn);
     $invoice = build_bill($dist_items, $shipping_method);
 
+    
     if(isset($_POST['check_out'])){
-        $sql = "INSERT INTO tbl_user_order(user_id) VALUE('$user_id');";
-        // mysqli_query($conn, $sql)
-        if(mysqli_query($conn, $sql)){
-            $new_order_id = mysqli_insert_id($conn);
-            $sql = build_multi_insert_order($new_order_id, $cart_items);
-            // echo $sql;
-            if(mysqli_query($conn, $sql)){
-                $sql = "UPDATE $tbl_shopping_cart SET status = True WHERE user_id=$user_id AND status=False;";
-                if(mysqli_query($conn, $sql)){
-                    header("Location: ./order_history.php");
-                }else {
-                    echo '<script>alert("Unable to checking out status!")</script>';
-                }
-
-            } else {
-                echo '<script>alert("Unable to add to order history!")</script>';
-            }
+        if($payment_method == NULL || $address == NULL || $cart_items == NULL){
+            echo '<script>alert("Missing Payment OR Address OR No items")</script>';
         } else {
-            echo '<script>alert("Unable Check Out!")</script>';
+            $sql = "INSERT INTO tbl_user_order(user_id) VALUE('$user_id');";
+        // mysqli_query($conn, $sql)
+            if(mysqli_query($conn, $sql)){
+                $new_order_id = mysqli_insert_id($conn);
+                $sql = build_multi_insert_order($new_order_id, $cart_items);
+                // echo $sql;
+                if(mysqli_query($conn, $sql)){
+                    $sql = "UPDATE $tbl_shopping_cart SET status = True WHERE user_id=$user_id AND status=False;";
+                    if(mysqli_query($conn, $sql)){
+                        header("Location: ./order_history.php");
+                    }else {
+                        echo '<script>alert("Unable to checking out status!")</script>';
+                    }
+
+                } else {
+                    echo '<script>alert("Unable to add to order history!")</script>';
+                }
+            } else {
+                echo '<script>alert("Unable Check Out!")</script>';
+            }
         }
+        
     }
 
     if(isset($_POST['coupon_add'])){
@@ -134,8 +135,10 @@
 
     function build_booktype_collection($cart){
         $types = array();
-        foreach($cart as $c){
-            $types[] = intval($c['book_type']);
+        if($cart != NULL){
+            foreach($cart as $c){
+                $types[] = intval($c['book_type']);
+            }
         }
         $r = array_filter(array_count_values($types), function($v) { return $v >= 1; });
         return $r;
@@ -248,7 +251,7 @@
                 <?php endforeach; ?>
             </select>
             <?php else: ?>
-                <a href="">Add new Payment Method</a>
+                <a href="../users/card-payment-signup.php">Add new Payment Method</a>
             <?php endif; ?>
         </div>
 
@@ -262,7 +265,7 @@
                 <?php endforeach;?>
             </select>
             <?php else: ?>
-                <a href="">Add new Address</a>
+                <a href="../users/billingaddress-signup.php">Add new Address</a>
             <?php endif; ?>
         </div>
         <div class="input-box">

@@ -36,6 +36,14 @@
             $_SESSION['user_id'] = $users[0]['user_id'];
             $_SESSION['user_logged_in'] = True;
 
+            $_SESSION['address_line1']="";
+            $_SESSION['address_line2']="";
+            $_SESSION['city']="";
+            $_SESSION['postal_code']="";
+            $_SESSION['telephone']="";
+            $_SESSION['mobile']="";
+            $_SESSION['country']="";
+
             //  Query to see if user exists in author table
             $sql = "SELECT $tbl_is_author.author_id FROM $tbl_is_author WHERE user_id = (SELECT $tbl_users.user_id FROM $tbl_users WHERE username = '$user_username' AND password='$user_password')";
             $result = mysqli_query($conn, $sql);

@@ -1,6 +1,5 @@
 <?php
     session_start();
-    print_r($_SESSION);
     if(isset( $_SESSION['user_id'])){
         $user_id = $_SESSION['user_id'];
     }
@@ -73,9 +72,9 @@
         <form action="<?php htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
             <h3> Log-in</h3>
             <div class="log-in-type">
-                <button type="submit" name="users" <?php if(isset($_SESSION['publisher_logged_in']) && $_SESSION['publisher_logged_in']==True) echo 'disabled';  ?> >Users</button>
-                <button type="submit" name="publishers" <?php if(isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in']==True) echo 'disabled'; ?> >Publishers</button>
-                <button type="submit" name="admin">Admin</button>
+                <button type="submit" name="users" <?php if(isset($_SESSION['publisher_logged_in']) || isset($_SESSION['admin'])) echo 'disabled';  ?> >Users</button>
+                <button type="submit" name="publishers" <?php if(isset($_SESSION['user_logged_in']) || isset($_SESSION['admin'])) echo 'disabled'; ?> >Publishers</button>
+                <button type="submit" name="admin" <?php if(isset($_SESSION['user_logged_in']) || isset($_SESSION['publisher_logged_in'])) echo 'disabled'; ?>>Admin</button>
             </div>
         </form>
     </div>
