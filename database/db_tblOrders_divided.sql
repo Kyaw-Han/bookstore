@@ -96,11 +96,11 @@ CREATE TRIGGER `add_new_inventory_row_for_new_book` AFTER INSERT ON `tbl_books`
 
 -- Discount Tables
 CREATE TABLE tbl_discounts(
-    discount_code varchar(10) NOT NULL,
-    discount_name char(30)NOT NULL,
+    discount_code varchar(50) NOT NULL,
+    discount_name varchar(50)NOT NULL,
     discount_percentage int(2)NOT NULL, 
     created_at datetime DEFAULT CURRENT_TIMESTAMP,
-    expired_at datetime DEFAULT NULL
+    expired_at datetime DEFAULT DATE_ADD(NOW(), INTERVAL 1 MONTH)
 );
 
 ALTER TABLE tbl_discounts
@@ -142,7 +142,7 @@ ADD UNIQUE (user_id, book_id, book_count, amount, status , created_at);
 
 
 -- Order history 
--- New Cide
+-- New Code
 CREATE TABLE tbl_user_order(
     order_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -317,3 +317,12 @@ VALUES
 (2, 1, "UPS 2 Days",  0.00),
 (3, 1, "Email Delivery",  0.00),
 (4, 1, "Application Delivery",  0.00);
+
+-- Insert Discounts
+INSERT INTO tbl_discounts (discount_code, discount_name, discount_percentage)
+VALUES
+('newuser20', 'WELCOME USER', 20),
+('newyear30', 'HAPPY NEWYEAR', 30),
+('thankgiving50', 'HAPPY TG', 50),
+('comeback25', 'COMEBACK PROMO', 25),
+('holiday15', 'SPRING HOLIDAYS', 15);
