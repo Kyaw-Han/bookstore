@@ -1,6 +1,7 @@
 <?php
     session_start();
-
+    print_r($_SESSION);
+    $user_id = $_SESSION['user_id'];
 
     include('./config/db_connection.php');
 
@@ -22,6 +23,44 @@
         // this is where admin user goes
         header("Location: ./login/admin.php");
     }
+
+    if(isset($_POST['add_to_cart'])){
+        if(!isset($_SESSION['user_logged_in'])){
+            $next = $_SERVER['PHP_SELF'];
+            header("Location: ./login/log-in-users.php?next=$next");
+        }else {
+            $bk_id = htmlspecialchars($_POST['bk_id']);
+            $bk_pr = htmlspecialchars($_POST['bk_pr']);
+            
+            $sql = "SELECT book_id FROM tbl_shopping_cart WHERE user_id=$user_id AND book_id=$bk_id AND status = False;";
+
+            if(mysqli_num_rows(mysqli_query($conn, $sql)) > 0){
+                $sql = "UPDATE tbl_shopping_cart SET book_count= book_count+1, amount = amount+$bk_pr WHERE user_id=$user_id AND book_id=$bk_id AND status = False;";
+
+                if(mysqli_query($conn, $sql)){
+                    header('refresh: 0; url = ./index.php');
+                } else{
+                    echo '<script>alert("Unable to Add to Cart")</script>';
+                }
+            }else{
+
+                $sql = "INSERT INTO tbl_shopping_cart(user_id, book_id, book_count, amount) VALUES ('$user_id', '$bk_id', 1, '$bk_pr');";
+                if(mysqli_query($conn, $sql)){
+                    header('refresh: 0; url = ./index.php');
+                } else{
+                    echo '<script>alert("Unable to Add to Cart")</script>';
+                }
+            }
+         
+        }
+    }
+    function get_shopping_cart_count($conn, $user_id){
+        $sql = "SELECT SUM(book_count) as cart_toal FROM tbl_shopping_cart WHERE user_id = $user_id and status = False;";
+        $result = mysqli_query($conn, $sql);
+        $count = mysqli_fetch_row($result);
+        return $count;
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +80,9 @@
     <hr>
     <?php include("./functions/functions.php");?>
     <?php include('./books/search-books.php'); ?>
+    <?php if(isset($_SESSION['user_logged_in'])): ?>
+        <h2><a href="./orders/shopping_cart.php">Cart:</a> Items: <?php echo (get_shopping_cart_count($conn, $user_id)[0] == 0) ? '0': get_shopping_cart_count($conn, $user_id)[0]; ?></h2>
+    <?php endif;?>
     <?php include('./books/display-books.php') ?>
 
     <?php include('./templates/footer.php'); ?>
