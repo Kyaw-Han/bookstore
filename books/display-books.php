@@ -9,8 +9,8 @@
         mysqli_free_result($result);
     }
 
+  
 ?>
-
 
 
 
@@ -29,6 +29,8 @@
             </td>
             <td style="text-align:center;">
                 <form action="<?php htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
+                    <input type="text" name="bk_id" id="" hidden value="<?php echo $book['book_id']; ?>">
+                    <input type="text" name="bk_pr" id="" hidden value="<?php echo $book['price']; ?>">
                     <button type="submit" name="add_to_cart" value="" <?php if(isset($_SESSION['publisher_logged_in']) && $_SESSION['publisher_logged_in']==True) echo 'disabled'; ?>><b>Add</b></button>
                 </form>
             </td>
